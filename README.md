@@ -8,7 +8,7 @@ from a doorvest (doorvest.com) statement.
 Clone the repository:
 
 ```bash
-git clone https://github.com/gramcraka/my_python_script.git
+git clone https://github.com/gramcraka/doorvestStatementExtractor
 ```
 
 Navigate to the project directory and install the required packages:
