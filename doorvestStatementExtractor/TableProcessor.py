@@ -19,8 +19,7 @@ class TableProcessor:
         self.rowYPos = None
         self.state = 'init'
         self.headerPositions = OrderedDict()  # stores header data (header->xPos)
-        self.headerList = list()
-        self.step = 0  # Track current step
+        self.step = 0  # Running state transition steps total
 
     def _end_page(self):
         if self.state == 'init':
@@ -74,7 +73,8 @@ class TableProcessor:
         elif s == 'readHeader' or s == 'readCell' or s == 'skipRow' or s == 'endPage':
             self.state = 'readRow'
             if self.currentRow is not None:
-                self.data = pd.concat([self.data, pd.DataFrame([self.currentRow], columns=self.headerList)],
+                self.data = pd.concat([self.data,
+                                       pd.DataFrame([self.currentRow], columns=list(self.headerPositions.keys()))],
                                       ignore_index=True)
             self.currentRow = {key: None for key in self.headerPositions.keys()}
         self.step += 1
@@ -82,7 +82,7 @@ class TableProcessor:
     def concat(self, other):  # Concatenate two TableProcessors
         if self.state != 'end' or other.state != 'end':
             raise ValueError("TableProcessor not finished")
-        if self.headerList != other.headerList:
+        if self.headerPositions.keys() != other.headerPositions.keys():
             raise ValueError("Header mismatch")
         self.data = pd.concat([self.data, other.data], ignore_index=True)
 
@@ -177,7 +177,7 @@ class TableProcessor:
         elif self.state == 'readHeader':
             header_text = self._process_header(text, text_matrix[4])
             if header_text == 'Balance':  # Last header
-                self.data = pd.DataFrame(columns=self.headerList)
+                self.data = pd.DataFrame(columns=list(self.headerPositions.keys()))
                 self._read_row()
         elif self.state == 'readRow':
             self._read_cell()
@@ -191,6 +191,5 @@ class TableProcessor:
 
     def _process_header(self, text, x_pos):
         text = text.strip()
-        self.headerList.append(text)
         self.headerPositions[text] = x_pos
         return text

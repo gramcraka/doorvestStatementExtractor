@@ -14,8 +14,6 @@ def extract_content(file_path):
 
     return tp
 
-    # Define a function to extract date and unpaid amount from text content
-
 
 def extract_info(content):
     pattern_date = re.compile(r'\b[A-Z][a-z]{2} \d{2}, \d{4}\b')
