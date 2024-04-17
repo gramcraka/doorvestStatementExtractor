@@ -2,13 +2,13 @@ import os
 import re
 import argparse
 from PyPDF2 import PdfReader
-from TableProcessor import TableProcessor
+from . import TableProcessor as Tp
 
 
 def extract_content(file_path):
     pdf_reader = PdfReader(file_path)
     pdf_text_content = ''
-    tp = TableProcessor()
+    tp = Tp.TableProcessor()
     for page in pdf_reader.pages:
         pdf_text_content += page.extract_text(visitor_text=tp.extract_text_visitor_callback)
 

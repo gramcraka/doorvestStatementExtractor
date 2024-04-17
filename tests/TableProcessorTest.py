@@ -1,9 +1,10 @@
+import os
 import unittest
 
 from doorvestStatementExtractor.TableProcessor import TableProcessor
 
 
-class MyTestCase(unittest.TestCase):
+class TableProcessorTestCase(unittest.TestCase):
     def test_start_start(self):
         tp = TableProcessor()
         with self.assertRaises(ValueError):
